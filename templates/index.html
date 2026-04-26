@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RecoAI — Smart Product Recommendations</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #0a0a0f;
+  --surface:  #12121a;
+  --card:     #1a1a26;
+  --border:   #2a2a3d;
+  --accent:   #6c63ff;
+  --accent2:  #ff6584;
+  --accent3:  #43e97b;
+  --text:     #e8e8f0;
+  --muted:    #7070a0;
+  --glow:     rgba(108,99,255,.25);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ambient background */
+body::before {
+  content:'';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 20%, rgba(108,99,255,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 85% 75%, rgba(255,101,132,.08) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 60% at 50% 50%, rgba(67,233,123,.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── HEADER ─────────────────────────────────────────── */
+header {
+  position: relative;
+  z-index: 10;
+  padding: 1.5rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.5px;
+}
+
+.logo span { color: var(--accent); }
+
+.header-badge {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  padding: .35rem 1rem;
+  border-radius: 100px;
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+/* ─── LAYOUT ──────────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 0;
+  min-height: calc(100vh - 65px);
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── SIDEBAR ─────────────────────────────────────────── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sidebar-section h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: .7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+/* Stats cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .9rem;
+  text-align: center;
+  transition: border-color .2s;
+}
+.stat-card:hover { border-color: var(--accent); }
+.stat-card .num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.stat-card .label {
+  font-size: .7rem;
+  color: var(--muted);
+  margin-top: .2rem;
+}
+
+/* Customer selector */
+.customer-list { display: flex; flex-direction: column; gap: .5rem; }
+
+.customer-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: left;
+  color: var(--text);
+  width: 100%;
+}
+.customer-btn:hover { border-color: var(--accent); background: rgba(108,99,255,.08); }
+.customer-btn.active {
+  border-color: var(--accent);
+  background: rgba(108,99,255,.15);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.customer-btn .cname {
+  font-weight: 500;
+  font-size: .9rem;
+}
+.customer-btn .cseg {
+  font-size: .75rem;
+  color: var(--muted);
+  margin-top: .15rem;
+}
+
+/* Algorithm badge */
+.algo-badge {
+  background: rgba(67,233,123,.08);
+  border: 1px solid rgba(67,233,123,.25);
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: .78rem;
+  color: var(--accent3);
+  line-height: 1.6;
+}
+
+/* ─── MAIN ────────────────────────────────────────────── */
+main {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Section heading */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.section-head h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.section-head .sub {
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+/* ─── WELCOME STATE ───────────────────────────────────── */
+.welcome-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  gap: 1rem;
+  opacity: .6;
+}
+.welcome-state .big-icon { font-size: 4rem; }
+.welcome-state h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+}
+.welcome-state p { color: var(--muted); max-width: 340px; }
+
+/* ─── PRODUCT GRID ────────────────────────────────────── */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all .25s;
+  position: relative;
+  overflow: hidden;
+}
+.product-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  opacity: 0;
+  transition: opacity .25s;
+}
+.product-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px var(--glow);
+}
+.product-card:hover::before { opacity: .04; }
+.product-card.selected {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 2px var(--accent2);
+}
+
+.product-card .emoji {
+  font-size: 2.5rem;
+  margin-bottom: .75rem;
+  display: block;
+}
+.product-card .pname {
+  font-size: .88rem;
+  font-weight: 500;
+  margin-bottom: .4rem;
+  line-height: 1.4;
+}
+.product-card .pcat {
+  font-size: .72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.product-card .pprice {
+  margin-top: .75rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: var(--accent3);
+  font-size: 1rem;
+}
+.product-card .prating {
+  position: absolute;
+  top: .75rem;
+  right: .75rem;
+  background: rgba(255,255,255,.06);
+  border-radius: 100px;
+  padding: .2rem .5rem;
+  font-size: .7rem;
+  color: #ffd700;
+}
+
+/* Match badge on recommended cards */
+.match-badge {
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 100px;
+  padding: .2rem .6rem;
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+/* ─── HISTORY STRIP ───────────────────────────────────── */
+.history-strip {
+  display: flex;
+  gap: .75rem;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+.history-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .75rem 1rem;
+  min-width: 140px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+.history-item:hover { border-color: var(--accent2); }
+.history-item .h-emoji { font-size: 1.5rem; }
+.history-item .h-name { font-size: .75rem; margin-top: .4rem; line-height: 1.3; }
+.history-item .h-score {
+  font-size: .7rem;
+  color: var(--accent3);
+  margin-top: .3rem;
+}
+
+/* ─── LOADING ─────────────────────────────────────────── */
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin: 2rem auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-state { text-align: center; padding: 3rem; color: var(--muted); }
+
+/* ─── TOAST ───────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  font-size: .875rem;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all .35s cubic-bezier(.34,1.56,.64,1);
+  z-index: 999;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ─── CUSTOMER HEADER ─────────────────────────────────── */
+.customer-header {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.customer-avatar {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+.customer-info h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.customer-info .seg-tag {
+  display: inline-block;
+  margin-top: .4rem;
+  background: rgba(108,99,255,.15);
+  border: 1px solid rgba(108,99,255,.3);
+  border-radius: 100px;
+  padding: .2rem .75rem;
+  font-size: .72rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* ─── ALGO INFO ───────────────────────────────────────── */
+.algo-info {
+  background: rgba(67,233,123,.05);
+  border: 1px solid rgba(67,233,123,.2);
+  border-radius: 10px;
+  padding: .6rem 1rem;
+  font-size: .78rem;
+  color: var(--accent3);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* ─── FILTER TABS ─────────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.filter-tab {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: .35rem 1rem;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all .2s;
+  color: var(--muted);
+}
+.filter-tab:hover, .filter-tab.active {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgba(108,99,255,.1);
+}
+
+/* animations */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.animate-in { animation: fadeUp .4s ease forwards; }
+.animate-in:nth-child(2) { animation-delay:.05s; }
+.animate-in:nth-child(3) { animation-delay:.1s; }
+.animate-in:nth-child(4) { animation-delay:.15s; }
+.animate-in:nth-child(5) { animation-delay:.2s; }
+.animate-in:nth-child(6) { animation-delay:.25s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Reco<span>AI</span></div>
+  <div class="header-badge">ML-Powered</div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- Stats -->
+    <div class="sidebar-section">
+      <h3>Platform Stats</h3>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="num">—</div><div class="label">Customers</div></div>
+        <div class="stat-card"><div class="num">—</div><div class="label">Products</div></div>
+        <div class="stat-card"><div class="num">—</div><div class="label">Interactions</div></div>
+        <div class="stat-card"><div class="num">—</div><div class="label">Categories</div></div>
+      </div>
+    </div>
+
+    <!-- Customers -->
+    <div class="sidebar-section">
+      <h3>Select Customer</h3>
+      <div class="customer-list" id="customer-list">
+        {% for c in customers %}
+        <button class="customer-btn" data-id="{{ c.id }}" onclick="selectCustomer('{{ c.id }}', this)">
+          <div class="cname">{{ c.name }}</div>
+          <div class="cseg">{{ c.segment }}</div>
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Algorithm info -->
+    <div class="sidebar-section">
+      <h3>Algorithm</h3>
+      <div class="algo-badge">
+        ⚡ <strong>Hybrid Filtering</strong><br/>
+        Combines user-based collaborative filtering (cosine similarity) with content-based scoring on category, price, and rating.
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main-content">
+    <div class="welcome-state" id="welcome">
+      <div class="big-icon">🎯</div>
+      <h2>Select a Customer to Begin</h2>
+      <p>Choose a customer profile from the left panel to see personalized product recommendations powered by ML.</p>
+    </div>
+
+    <div id="results" style="display:none;">
+      <!-- Customer header -->
+      <div id="customer-header"></div>
+
+      <!-- Browse Catalog -->
+      <div style="margin-top: 2rem;">
+        <div class="section-head">
+          <h2>Browse Catalog</h2>
+          <span class="sub">Click a product to refine recommendations</span>
+        </div>
+        <div class="filter-tabs" id="filter-tabs">
+          <button class="filter-tab active" onclick="filterCatalog(null, this)">All</button>
+          {% for cat in categories %}
+          <button class="filter-tab" onclick="filterCatalog('{{ cat }}', this)">{{ cat }}</button>
+          {% endfor %}
+        </div>
+        <div class="products-grid" id="catalog-grid">
+          {% for p in products %}
+          <div class="product-card" data-id="{{ p.id }}" data-cat="{{ p.category }}"
+               onclick="selectProduct({{ p.id }}, this)">
+            <span class="prating">★ {{ p.rating }}</span>
+            <span class="emoji">{{ p.image }}</span>
+            <div class="pname">{{ p.name }}</div>
+            <div class="pcat">{{ p.category }}</div>
+            <div class="pprice">₹{{ p.price * 83 | int | round(-2) }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Purchase History -->
+      <div style="margin-top: 2rem;">
+        <div class="section-head">
+          <h2>Purchase History</h2>
+          <span class="sub">Based on simulated interaction data</span>
+        </div>
+        <div class="history-strip" id="history-strip"></div>
+      </div>
+
+      <!-- Recommendations -->
+      <div style="margin-top: 2rem;">
+        <div class="section-head">
+          <h2>Recommended For You</h2>
+          <div class="algo-info">🧠 <span id="algo-label">Hybrid CF + Content-Based</span></div>
+        </div>
+        <div class="products-grid" id="reco-grid">
+          <div class="loading-state"><div class="spinner"></div>Generating recommendations…</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+let currentCustomer = null;
+let selectedProductId = null;
+
+// ── Load stats ────────────────────────────────────────────────────────────
+fetch('/api/stats').then(r=>r.json()).then(d=>{
+  const nums = document.querySelectorAll('#stats-grid .num');
+  nums[0].textContent = d.total_customers;
+  nums[1].textContent = d.total_products;
+  nums[2].textContent = d.interactions;
+  nums[3].textContent = d.categories;
+});
+
+// ── Select Customer ───────────────────────────────────────────────────────
+function selectCustomer(id, btn) {
+  document.querySelectorAll('.customer-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCustomer = id;
+  selectedProductId = null;
+  document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  fetchRecommendations();
+}
+
+// ── Select Product (refine recommendations) ───────────────────────────────
+function selectProduct(productId, card) {
+  if (selectedProductId === productId) {
+    selectedProductId = null;
+    card.classList.remove('selected');
+  } else {
+    document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+    selectedProductId = productId;
+    card.classList.add('selected');
+  }
+  if (currentCustomer) fetchRecommendations();
+}
+
+// ── Filter catalog ────────────────────────────────────────────────────────
+function filterCatalog(cat, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.display = (!cat || card.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+// ── Fetch Recommendations ─────────────────────────────────────────────────
+async function fetchRecommendations() {
+  document.getElementById('reco-grid').innerHTML =
+    '<div class="loading-state"><div class="spinner"></div>Generating recommendations…</div>';
+
+  const body = { customer_id: currentCustomer };
+  if (selectedProductId) body.last_viewed_id = selectedProductId;
+
+  const res  = await fetch('/api/recommend', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+
+  // Customer header
+  const c = data.customer;
+  document.getElementById('customer-header').innerHTML = `
+    <div class="customer-header">
+      <div class="customer-avatar">${c.name.charAt(0)}</div>
+      <div class="customer-info">
+        <h3>${c.name}</h3>
+        <span class="seg-tag">${c.segment}</span>
+      </div>
+      ${selectedProductId ? '<span class="algo-info" style="margin-left:auto">🎯 Refined by product selection</span>' : ''}
+    </div>`;
+
+  // History
+  const hs = document.getElementById('history-strip');
+  hs.innerHTML = data.history.map(h => `
+    <div class="history-item" onclick="selectProduct(${h.product.id}, document.querySelector('[data-id=\\'${h.product.id}\\']'))">
+      <div class="h-emoji">${h.product.image}</div>
+      <div class="h-name">${h.product.name}</div>
+      <div class="h-score">Score: ${h.score}</div>
+    </div>`).join('');
+
+  // Recommendations
+  const grid = document.getElementById('reco-grid');
+  grid.innerHTML = data.recommended.map((p, i) => `
+    <div class="product-card animate-in" style="animation-delay:${i*0.07}s">
+      <span class="match-badge">↑ ${p.match}%</span>
+      <span class="prating">★ ${p.rating}</span>
+      <span class="emoji">${p.image}</span>
+      <div class="pname">${p.name}</div>
+      <div class="pcat">${p.category}</div>
+      <div class="pprice">₹${Math.round(p.price * 83 / 100) * 100}</div>
+    </div>`).join('');
+
+  showToast(`✨ ${data.recommended.length} recommendations generated`);
+}
+
+// ── Toast ────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
