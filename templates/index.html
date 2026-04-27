@@ -533,14 +533,13 @@ main {
         </div>
         <div class="products-grid" id="catalog-grid">
           {% for p in products %}
-          <div class="product-card" data-id="{{ p.id }}" data-cat="{{ p.category }}"
-               onclick="selectProduct({{ p.id }}, this)">
+          <div class="product-card" data-id="{{ p.id }}" data-cat="{{ p.category }}" style="cursor:pointer;" onclick="window.location.href='/product/{{ p.id }}'">
             <span class="prating">★ {{ p.rating }}</span>
             <span class="emoji">{{ p.image }}</span>
             <div class="pname">{{ p.name }}</div>
             <div class="pcat">{{ p.category }}</div>
             <div class="pprice">₹{{ p.price * 83 | int | round(-2) }}</div>
-            <a href="/product/{{ p.id }}" class="view-btn" onclick="event.stopPropagation(); window.location='/product/{{ p.id }}'; return false;">View Details →</a>
+            <div class="view-btn">View Details →</div>
           </div>
           {% endfor %}
         </div>
