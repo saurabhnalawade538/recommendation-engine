@@ -457,7 +457,15 @@ main {
 <!-- HEADER -->
 <header>
   <div class="logo">Reco<span>AI</span></div>
-  <div class="header-badge">ML-Powered</div>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    {% if session.user %}
+    <span style="font-size:.85rem;color:var(--muted)">👋 {{ session.user.name }}</span>
+    <a href="/logout" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.35rem .9rem;font-size:.8rem;color:var(--text);text-decoration:none;">Logout</a>
+    {% else %}
+    <a href="/login" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;padding:.4rem 1rem;font-size:.8rem;color:white;text-decoration:none;">Login</a>
+    {% endif %}
+    <div class="header-badge">ML-Powered</div>
+  </div>
 </header>
 
 <div class="layout">

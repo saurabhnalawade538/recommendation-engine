@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -6,6 +6,16 @@ from sklearn.preprocessing import LabelEncoder
 import json, random
 
 app = Flask(__name__)
+app.secret_key = "recoai_secret_key_2024"
+
+# ── Users (Simple Login) ───────────────────────────────────────────────────
+USERS = {
+    "arjun@gmail.com":  {"password": "arjun123",  "name": "Arjun Sharma",  "customer_id": "C001"},
+    "priya@gmail.com":  {"password": "priya123",  "name": "Priya Patel",   "customer_id": "C002"},
+    "rahul@gmail.com":  {"password": "rahul123",  "name": "Rahul Mehta",   "customer_id": "C003"},
+    "sneha@gmail.com":  {"password": "sneha123",  "name": "Sneha Gupta",   "customer_id": "C004"},
+    "vikram@gmail.com": {"password": "vikram123", "name": "Vikram Singh",  "customer_id": "C005"},
+}
 
 # ── Synthetic Data Generation ──────────────────────────────────────────────
 PRODUCTS = [
@@ -205,6 +215,23 @@ def stats():
         "avg_rating":      round(np.mean([p["rating"] for p in PRODUCTS]), 2),
         "categories":      len(set(p["category"] for p in PRODUCTS)),
     })
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        user = USERS.get(email)
+        if user and user["password"] == password:
+            session["user"] = {"email": email, "name": user["name"], "customer_id": user["customer_id"]}
+            return redirect("/")
+        return render_template("login.html", error="Email किंवा Password चुकीचा आहे!")
+    return render_template("login.html", error=None)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
