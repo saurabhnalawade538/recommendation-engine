@@ -499,10 +499,20 @@ main {
 
   <!-- MAIN -->
   <main id="main-content">
-    <div class="welcome-state" id="welcome">
-      <div class="big-icon">🎯</div>
-      <h2>Select a Customer to Begin</h2>
-      <p>Choose a customer profile from the left panel to see personalized product recommendations powered by ML.</p>
+    <div id="welcome">
+      <p style="color:var(--muted);margin-bottom:1.5rem;font-size:.9rem">👈 Select a customer to get personalized recommendations!</p>
+      <div class="products-grid">
+        {% for p in products %}
+        <div class="product-card" data-cat="{{ p.category }}">
+          <span class="prating">★ {{ p.rating }}</span>
+          <span class="emoji">{{ p.image }}</span>
+          <div class="pname">{{ p.name }}</div>
+          <div class="pcat">{{ p.category }}</div>
+          <div class="pprice">₹{{ p.price * 83 | int | round(-2) }}</div>
+          <a href="/product/{{ p.id }}" class="view-btn">View Details →</a>
+        </div>
+        {% endfor %}
+      </div>
     </div>
 
     <div id="results" style="display:none;">
