@@ -179,6 +179,17 @@ def recommend():
         "algorithm":   "Hybrid CF + Content-Based (cosine similarity)"
     })
 
+@app.route("/product/<int:product_id>")
+def product_detail(product_id):
+    product = product_by_id(product_id)
+    if not product:
+        return "Product not found", 404
+    cb_recs = engine.content_based(product_id, top_n=4)
+    similar = [product_by_id(pid) for pid in cb_recs if product_by_id(pid)]
+    for s in similar:
+        s["match"] = round(random.uniform(75, 95), 1)
+    return render_template("product.html", product=product, similar=similar, customers=CUSTOMERS)
+
 @app.route("/api/products")
 def get_products():
     category = request.args.get("category")

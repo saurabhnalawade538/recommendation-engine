@@ -427,6 +427,18 @@ main {
   background: rgba(108,99,255,.1);
 }
 
+/* View button */
+.view-btn {
+  display: block;
+  margin-top: .75rem;
+  font-size: .75rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color .2s;
+}
+.view-btn:hover { color: var(--accent2); }
+
 /* animations */
 @keyframes fadeUp {
   from { opacity:0; transform:translateY(16px); }
@@ -518,6 +530,7 @@ main {
             <div class="pname">{{ p.name }}</div>
             <div class="pcat">{{ p.category }}</div>
             <div class="pprice">₹{{ p.price * 83 | int | round(-2) }}</div>
+            <a href="/product/{{ p.id }}" class="view-btn" onclick="event.stopPropagation()">View Details →</a>
           </div>
           {% endfor %}
         </div>

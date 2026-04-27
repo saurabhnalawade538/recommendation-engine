@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{{ product.name }} — RecoAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --card: #1a1a26;
+  --border: #2a2a3d;
+  --accent: #6c63ff;
+  --accent2: #ff6584;
+  --accent3: #43e97b;
+  --text: #e8e8f0;
+  --muted: #7070a0;
+  --glow: rgba(108,99,255,.25);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+body::before {
+  content:'';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 20%, rgba(108,99,255,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 85% 75%, rgba(255,101,132,.08) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* HEADER */
+header {
+  position: relative;
+  z-index: 10;
+  padding: 1.5rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  text-decoration: none;
+  color: var(--text);
+}
+.logo span { color: var(--accent); }
+.back-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .5rem 1.2rem;
+  color: var(--text);
+  text-decoration: none;
+  font-size: .875rem;
+  transition: all .2s;
+}
+.back-btn:hover { border-color: var(--accent); }
+
+/* MAIN */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* PRODUCT DETAIL */
+.product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3rem;
+  margin-bottom: 3rem;
+}
+
+.product-emoji-box {
+  background: linear-gradient(135deg, rgba(108,99,255,.15), rgba(255,101,132,.1));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8rem;
+  min-height: 280px;
+}
+
+.product-info { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.product-category {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.product-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .9rem;
+}
+.stars { color: #ffd700; font-size: 1.1rem; }
+.rating-num { color: var(--muted); }
+
+.product-price {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent3);
+}
+
+.product-desc {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: .95rem;
+}
+
+.btn-group { display: flex; gap: 1rem; margin-top: .5rem; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: 12px;
+  padding: .9rem 2rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  flex: 1;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--glow); }
+
+.btn-secondary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .9rem 1.5rem;
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-secondary:hover { border-color: var(--accent); }
+
+/* RECOMMENDATIONS */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.section-title .badge {
+  background: rgba(108,99,255,.15);
+  border: 1px solid rgba(108,99,255,.3);
+  border-radius: 100px;
+  padding: .25rem .75rem;
+  font-size: .7rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.similar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.similar-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all .25s;
+  text-decoration: none;
+  color: var(--text);
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.similar-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px var(--glow);
+}
+.similar-card .match {
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 100px;
+  padding: .2rem .6rem;
+  font-size: .7rem;
+  font-weight: 600;
+}
+.similar-card .s-emoji { font-size: 2.5rem; display: block; margin-bottom: .75rem; }
+.similar-card .s-name { font-size: .85rem; font-weight: 500; line-height: 1.4; margin-bottom: .4rem; }
+.similar-card .s-cat { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.similar-card .s-price { margin-top: .75rem; font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent3); }
+.similar-card .s-rating { position: absolute; top: .75rem; right: .75rem; font-size: .7rem; color: #ffd700; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--card);
+  border: 1px solid var(--accent3);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  font-size: .875rem;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all .35s cubic-bezier(.34,1.56,.64,1);
+  z-index: 999;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.similar-card { animation: fadeUp .4s ease forwards; }
+.similar-card:nth-child(2) { animation-delay:.07s; }
+.similar-card:nth-child(3) { animation-delay:.14s; }
+.similar-card:nth-child(4) { animation-delay:.21s; }
+
+@media (max-width: 768px) {
+  .product-detail { grid-template-columns: 1fr; }
+  .similar-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Reco<span>AI</span></a>
+  <a href="/" class="back-btn">← Back to Home</a>
+</header>
+
+<main>
+  <!-- Product Detail -->
+  <div class="product-detail">
+    <div class="product-emoji-box">{{ product.image }}</div>
+    <div class="product-info">
+      <div class="product-category">{{ product.category }}</div>
+      <h1 class="product-name">{{ product.name }}</h1>
+      <div class="product-rating">
+        <span class="stars">★★★★★</span>
+        <span>{{ product.rating }}</span>
+        <span class="rating-num">({{ (product.rating * 200) | int }} reviews)</span>
+      </div>
+      <div class="product-price">₹{{ (product.price * 83) | int | round(-2) }}</div>
+      <p class="product-desc">
+        Premium quality {{ product.name }} designed for performance and comfort.
+        Trusted by thousands of customers across India.
+        Fast delivery available across all major cities.
+      </p>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="addToCart()">🛒 Add to Cart</button>
+        <button class="btn-secondary" onclick="wishlist()">♡ Wishlist</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Similar Products -->
+  <div class="section-title">
+    You May Also Like
+    <span class="badge">🧠 AI Recommended</span>
+  </div>
+
+  <div class="similar-grid">
+    {% for p in similar %}
+    <a href="/product/{{ p.id }}" class="similar-card">
+      <span class="match">↑ {{ p.match }}%</span>
+      <span class="s-rating">★ {{ p.rating }}</span>
+      <span class="s-emoji">{{ p.image }}</span>
+      <div class="s-name">{{ p.name }}</div>
+      <div class="s-cat">{{ p.category }}</div>
+      <div class="s-price">₹{{ (p.price * 83) | int | round(-2) }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function addToCart() {
+  showToast("✅ Added to Cart!");
+}
+function wishlist() {
+  showToast("♡ Added to Wishlist!");
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
