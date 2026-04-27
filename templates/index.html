@@ -540,7 +540,7 @@ main {
             <div class="pname">{{ p.name }}</div>
             <div class="pcat">{{ p.category }}</div>
             <div class="pprice">₹{{ p.price * 83 | int | round(-2) }}</div>
-            <a href="/product/{{ p.id }}" class="view-btn" onclick="event.stopPropagation()">View Details →</a>
+            <a href="/product/{{ p.id }}" class="view-btn" onclick="event.stopPropagation(); window.location='/product/{{ p.id }}'; return false;">View Details →</a>
           </div>
           {% endfor %}
         </div>
