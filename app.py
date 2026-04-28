@@ -10,11 +10,9 @@ app.secret_key = "recoai_secret_key_2024"
 
 # ── Users (Simple Login) ───────────────────────────────────────────────────
 USERS = {
-    "arjun@gmail.com":  {"password": "arjun123",  "name": "Arjun Sharma",  "customer_id": "C001"},
-    "priya@gmail.com":  {"password": "priya123",  "name": "Priya Patel",   "customer_id": "C002"},
-    "rahul@gmail.com":  {"password": "rahul123",  "name": "Rahul Mehta",   "customer_id": "C003"},
-    "sneha@gmail.com":  {"password": "sneha123",  "name": "Sneha Gupta",   "customer_id": "C004"},
-    "vikram@gmail.com": {"password": "vikram123", "name": "Vikram Singh",  "customer_id": "C005"},
+    "saurabh@gmail.com":  {"password": "saurabh123",  "name": "Saurabh Nalawade", "customer_id": "C001"},
+    "akanksha@gmail.com": {"password": "Akanksha123", "name": "Akanksha",          "customer_id": "C002"},
+    "janvhi@gmail.com":   {"password": "janvhi123",   "name": "Janvhi",            "customer_id": "C003"},
 }
 
 # ── Synthetic Data Generation ──────────────────────────────────────────────
