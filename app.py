@@ -11,7 +11,7 @@ app.secret_key = "recoai_secret_key_2024"
 # ── Users (Simple Login) ───────────────────────────────────────────────────
 USERS = {
     "saurabh@gmail.com":  {"password": "saurabh123",  "name": "Saurabh Nalawade", "customer_id": "C001"},
-    "akanksha@gmail.com": {"password": "Akanksha123", "name": "Akanksha",          "customer_id": "C002"},
+    "Akanksha@gmail.com": {"password": "Akanksha123", "name": "Akanksha",          "customer_id": "C002"},
     "janvhi@gmail.com":   {"password": "janvhi123",   "name": "Janvhi",            "customer_id": "C003"},
 }
 
