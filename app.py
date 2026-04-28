@@ -40,11 +40,11 @@ PRODUCTS = [
 ]
 
 CUSTOMERS = [
-    {"id": "C001", "name": "Arjun Sharma",   "segment": "Tech Enthusiast"},
-    {"id": "C002", "name": "Priya Patel",    "segment": "Fitness Lover"},
-    {"id": "C003", "name": "Rahul Mehta",    "segment": "Home Office Pro"},
-    {"id": "C004", "name": "Sneha Gupta",    "segment": "Wellness Seeker"},
-    {"id": "C005", "name": "Vikram Singh",   "segment": "Foodie"},
+    {"id": "C001", "name": "Saurabh",   "segment": "Tech Enthusiast"},
+    {"id": "C002", "name": "Akanksha",    "segment": "Fitness Lover"},
+    {"id": "C003", "name": "Janvhi",    "segment": "Home Office Pro"},
+    {"id": "C004", "name": "Vedant",    "segment": "Wellness Seeker"},
+    {"id": "C005", "name": "Payal",   "segment": "Foodie"},
 ]
 
 random.seed(42)
